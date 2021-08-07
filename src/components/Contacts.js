@@ -1,6 +1,7 @@
 import { React } from 'react';
 import { connect } from 'react-redux';
 import { operations } from '../redux/phonebook-operations';
+import { getVisibleContacts } from '../redux/phonebook-selectors';
 
 const Contacts = ({ contacts, deleteContact }) => (
   <ul className="nameList">
@@ -18,15 +19,8 @@ const Contacts = ({ contacts, deleteContact }) => (
   </ul>
 );
 
-const getVisibleContacts = (allContacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-  if (allContacts) {
-    return allContacts.filter(({ name }) => name.toLowerCase().includes(normalizedFilter));
-  }
-};
-
 const mapStateToProps = (state) => ({
-  contacts: getVisibleContacts(state.contacts.items, state.filter),
+  contacts: getVisibleContacts(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

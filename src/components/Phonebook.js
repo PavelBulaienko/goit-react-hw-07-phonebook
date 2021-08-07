@@ -4,6 +4,7 @@ import shortid from 'shortid';
 import { connect } from 'react-redux';
 import { actions } from '../redux/actions';
 import { operations } from '../redux/phonebook-operations';
+import { getContacts } from '../redux/phonebook-selectors';
 
 class Phonebook extends Component {
   state = {
@@ -20,13 +21,6 @@ class Phonebook extends Component {
   };
   handleInputContact = (e) => {
     this.setState({ number: e.target.value });
-  };
-  handleInputFilter = (e) => {
-    const names = this.props.contacts.contacts.items.map((contact) => contact.name);
-    const filteredNames = names.filter((name) =>
-      name.toLowerCase().includes(e.target.value.toLowerCase()),
-    );
-    this.props.filterContacts(filteredNames);
   };
 
   render() {
@@ -73,22 +67,23 @@ class Phonebook extends Component {
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
           required
-          value={this.props.contacts.filter}
           onChange={this.props.handleFilter}
           className="nameFilter"
         />
-        {this.props.contacts.contacts && <Contacts contacts={this.props.contacts.contacts} />}
+        {this.props.contacts && <Contacts contacts={this.props.contacts} />}
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => ({ contacts: state });
+const mapStateToProps = (state) => ({
+  contacts: getContacts(state),
+});
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchContacts: () => dispatch(operations.fetchContacts()),
   addContact: (contact) => dispatch(operations.addContact(contact)),
   filterContacts: (contacts) => dispatch(operations.filteredContact(contacts)),
-  fetchContacts: () => dispatch(operations.fetchContacts()),
   handleFilter: (e) => dispatch(actions.changeFilter(e.target.value)),
 });
 
