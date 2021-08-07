@@ -4,20 +4,30 @@ import { operations } from '../redux/phonebook-operations';
 
 const Contacts = ({ contacts, deleteContact }) => (
   <ul className="nameList">
-    {contacts.map(({ id, name, number }) => (
-      <li key={id} className="item">
-        <p className="name">
-          {name}: {number}
-        </p>
-        <button type="button" onClick={() => deleteContact(id)}>
-          Delete
-        </button>
-      </li>
-    ))}
+    {contacts &&
+      contacts.map(({ id, name, number }) => (
+        <li key={id} className="item">
+          <p className="name">
+            {name}: {number}
+          </p>
+          <button type="button" onClick={() => deleteContact(id)}>
+            Delete
+          </button>
+        </li>
+      ))}
   </ul>
 );
 
-const mapStateToProps = (state) => ({ contacts: state });
+const getVisibleContacts = (allContacts, filter) => {
+  const normalizedFilter = filter.toLowerCase();
+  if (allContacts) {
+    return allContacts.filter(({ name }) => name.toLowerCase().includes(normalizedFilter));
+  }
+};
+
+const mapStateToProps = (state) => ({
+  contacts: getVisibleContacts(state.contacts.items, state.filter),
+});
 
 const mapDispatchToProps = (dispatch) => ({
   deleteContact: (contactID) => dispatch(operations.deleteContact(contactID)),

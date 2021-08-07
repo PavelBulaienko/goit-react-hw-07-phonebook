@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import Contacts from './Contacts';
-import FilteredContacts from './FilteredContacts';
 import shortid from 'shortid';
 import { connect } from 'react-redux';
 import { actions } from '../redux/actions';
@@ -23,7 +22,7 @@ class Phonebook extends Component {
     this.setState({ number: e.target.value });
   };
   handleInputFilter = (e) => {
-    const names = this.props.contacts.items.map((contact) => contact.name);
+    const names = this.props.contacts.contacts.items.map((contact) => contact.name);
     const filteredNames = names.filter((name) =>
       name.toLowerCase().includes(e.target.value.toLowerCase()),
     );
@@ -55,7 +54,7 @@ class Phonebook extends Component {
             className="numberInput"
           />
           <button
-            type="submit"
+            type="button"
             onClick={() =>
               this.props.addContact({
                 name: this.state.name,
@@ -74,17 +73,11 @@ class Phonebook extends Component {
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
           required
-          onChange={this.handleInputFilter}
+          value={this.props.contacts.filter}
+          onChange={this.props.handleFilter}
           className="nameFilter"
         />
-        {/* {this.props.contacts.filter.length === 0 ? ( */}
-        <Contacts contacts={this.props.contacts} />
-        {/* ) : (
-          <FilteredContacts
-            contacts={this.props.contacts.items}
-            filter={this.props.contacts.filter}
-          />
-        )} */}
+        {this.props.contacts.contacts && <Contacts contacts={this.props.contacts.contacts} />}
       </>
     );
   }
@@ -94,8 +87,9 @@ const mapStateToProps = (state) => ({ contacts: state });
 
 const mapDispatchToProps = (dispatch) => ({
   addContact: (contact) => dispatch(operations.addContact(contact)),
-  filterContacts: (contacts) => dispatch(actions.filteredContact(contacts)),
+  filterContacts: (contacts) => dispatch(operations.filteredContact(contacts)),
   fetchContacts: () => dispatch(operations.fetchContacts()),
+  handleFilter: (e) => dispatch(actions.changeFilter(e.target.value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Phonebook);

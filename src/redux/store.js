@@ -31,19 +31,26 @@ import {
 const contacts = [];
 
 const reducer = createReducer(contacts, {
-  [actions.fetchContactSuccess]: (_, { payload }) => payload,
+  [actions.fetchContactSuccess]: ({ items, filter }, { payload }) => {
+    return { items: payload, filter };
+  },
   [actions.addContactSuccess]: ({ items, filter }, { payload }) => {
     return { items: [...items, payload], filter: filter };
   },
   [actions.deleteContactSuccess]: ({ items, filter }, { payload }) => {
-    return {
-      items: [...items.filter((contact) => contact.id !== payload)],
-      filter: filter,
-    };
+    return [...items.filter((contact) => contact.id !== payload)];
+    // {
+    //   items: [...items.filter((contact) => contact.id !== payload)],
+    //   filter: filter,
+    // };
   },
-  [actions.filteredContact]: ({ items }, { payload }) => {
-    return { items: items, filter: payload };
-  },
+  // [actions.changeFilter]: ({ items }, { payload }) => {
+  //   return { items: items, filter: payload };
+  // },
+});
+
+const filter = createReducer('', {
+  [actions.changeFilter]: (_, { payload }) => payload,
 });
 
 // const loading = createReducer(false, {
@@ -68,7 +75,10 @@ const middleware = [
 ];
 
 const store = configureStore({
-  reducer,
+  reducer: {
+    contacts: reducer,
+    filter,
+  },
   middleware,
   devTools: process.env.NODE_ENV === 'development',
 });

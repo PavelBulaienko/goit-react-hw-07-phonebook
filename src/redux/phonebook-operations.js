@@ -30,8 +30,13 @@ const deleteContact = (contactId) => (dispatch) => {
     .catch((error) => dispatch(actions.deleteContactError(error)));
 };
 
+const filterContacts = (contact) => (dispatch) => {
+  dispatch(actions.changeFilter());
+};
+
 export const operations = {
   addContact,
   deleteContact,
   fetchContacts,
+  filterContacts,
 };

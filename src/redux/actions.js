@@ -12,9 +12,7 @@ const deleteContactRequest = createAction('phonebook/DeleteContactRequest');
 const deleteContactSuccess = createAction('phonebook/DeleteContactSuccess');
 const deleteContactError = createAction('phonebook/DeleteContactError');
 
-// const updateSessionContact = createAction('phonebook/UpdateContacts');
-
-const filteredContact = createAction('phonebook/FilteredContact');
+const changeFilter = createAction('phonebook/FilteredContact');
 
 export const actions = {
   addContactRequest,
@@ -26,6 +24,5 @@ export const actions = {
   fetchContactRequest,
   fetchContactSuccess,
   fetchContactError,
-  // updateSessionContact,
-  filteredContact,
+  changeFilter,
 };
