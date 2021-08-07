@@ -37,9 +37,6 @@ const reducer = createReducer(contacts, {
   [actions.addContactSuccess]: ({ items }, { payload }) => {
     return { items: [...items, payload] };
   },
-  // [actions.deleteContactSuccess]: ({ items }, { payload }) => {
-  //   return [...items.filter((contact) => contact.id !== payload)];
-  // },
   [actions.deleteContactSuccess]: ({ items }, { payload }) => {
     return { items: [...items.filter((contact) => contact.id !== payload)] };
   },
