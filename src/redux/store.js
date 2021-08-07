@@ -31,39 +31,23 @@ import {
 const contacts = [];
 
 const reducer = createReducer(contacts, {
-  [actions.fetchContactSuccess]: ({ items, filter }, { payload }) => {
-    return { items: payload, filter };
+  [actions.fetchContactSuccess]: (_, { payload }) => {
+    return { items: payload };
   },
-  [actions.addContactSuccess]: ({ items, filter }, { payload }) => {
-    return { items: [...items, payload], filter: filter };
+  [actions.addContactSuccess]: ({ items }, { payload }) => {
+    return { items: [...items, payload] };
   },
-  [actions.deleteContactSuccess]: ({ items, filter }, { payload }) => {
-    return [...items.filter((contact) => contact.id !== payload)];
-    // {
-    //   items: [...items.filter((contact) => contact.id !== payload)],
-    //   filter: filter,
-    // };
-  },
-  // [actions.changeFilter]: ({ items }, { payload }) => {
-  //   return { items: items, filter: payload };
+  // [actions.deleteContactSuccess]: ({ items }, { payload }) => {
+  //   return [...items.filter((contact) => contact.id !== payload)];
   // },
+  [actions.deleteContactSuccess]: ({ items }, { payload }) => {
+    return { items: [...items.filter((contact) => contact.id !== payload)] };
+  },
 });
 
 const filter = createReducer('', {
   [actions.changeFilter]: (_, { payload }) => payload,
 });
-
-// const loading = createReducer(false, {
-//   [actions.fetchContactRequest]: () => true,
-//   [actions.fetchContactSuccess]: () => false,
-//   [actions.fetchContactError]: () => false,
-//   [actions.addContactRequest]: () => true,
-//   [actions.addContactSuccess]: () => false,
-//   [actions.addContactError]: () => false,
-//   [actions.deleteContactRequest]: () => true,
-//   [actions.deleteContactSuccess]: () => false,
-//   [actions.deleteContactError]: () => false,
-// });
 
 const middleware = [
   ...getDefaultMiddleware({
